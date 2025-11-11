@@ -19,8 +19,8 @@ export class PatientPage {
   private addressLine1Input: Locator;
   private createPatientButton: Locator;
   private acceptButton: Locator;
-  private preparingButton: Locator;
-
+  private presentationBTN: Locator;
+  
   constructor(page: Page) {
     this.page = page;
 
@@ -28,19 +28,17 @@ export class PatientPage {
     this.patientsButton = page.getByRole('button', { name: 'patient Patients' });
     this.patientListButton = page.getByRole('button', { name: 'Patient List' });
     this.addPatientButton = page.locator('.MuiButtonBase-root.MuiIconButton-root.jss225');
-    this.createPatientButton = page.getByRole('button', { name: 'Create Patient' });
-    this.acceptButton = page.getByRole('button', { name: 'Accept' });
-    this.preparingButton = page.getByRole('button', { name: 'Preparing' });
+    this.createPatientButton = page.locator("button:has(span:has-text('Create Patient'))");
+    this.acceptButton = this.page.getByRole('button', { name: 'Accept' });
+    this.presentationBTN =page.getByRole('button', { name: 'Preparing'});
 
     // Inputs
     this.firstNameInput = page.getByRole('textbox', { name: 'First Name' });
     this.lastNameInput = page.getByRole('textbox', { name: 'Last Name' });
     this.genderDropdown = page.getByRole('button', { name: 'Open' }).nth(3);
     this.maritalStatusInput = page.getByRole('textbox', { name: 'Marital Status' });
-
     this.datePickerButton = page.getByRole('button', { name: 'Choose date' });
     this.calendarSwitchButton = page.getByRole('button', { name: 'calendar view is open, switch' });
-
     this.addressLine1Input = page.getByRole('textbox', { name: 'Address - Line 1' });
   }
 
@@ -133,6 +131,20 @@ getDayCell(day: number) {
 
     await this.page.getByRole('option', { name: firstUSAOption, exact: true }).click();
   }
+async clickCreatePatientButton() {
+  await this.createPatientButton.waitFor({ state: 'visible' });
+  await this.createPatientButton.scrollIntoViewIfNeeded();
+  await this.createPatientButton.click();
+
+}
+async clickAcceptButton() {
+  await this.acceptButton.waitFor({ state: 'visible', timeout: 5000 });
+  await this.acceptButton.scrollIntoViewIfNeeded();
+  await this.acceptButton.click();
+}
+
+
+
 
   // Create a new patient
   async createNewPatient(firstName: string, lastName: string) {
@@ -143,6 +155,8 @@ getDayCell(day: number) {
     await this.selectRandomMaritalStatus();
     await this.selectRandomDOB();
     await this.selectAddress('123');
+    await this.clickCreatePatientButton();
+    await this.clickAcceptButton();
   }
 }
 
